@@ -6,6 +6,7 @@
 //  Copyright © 2020 JON DEMAAGD. All rights reserved.
 //
 
+import CoreData
 import UIKit
 
 class NotebooksListViewController: UIViewController {
@@ -17,6 +18,7 @@ class NotebooksListViewController: UIViewController {
     
     // MARK: - variables
     
+    var dataController: DataController!
     var notebooks: [Notebook] = []
     var numberOfNotebooks: Int { return notebooks.count }
 
@@ -28,6 +30,16 @@ class NotebooksListViewController: UIViewController {
         navigationItem.titleView = UIImageView(image: #imageLiteral(resourceName: "toolbar-cow"))
         navigationItem.rightBarButtonItem = editButtonItem
         navigationItem.rightBarButtonItem?.tintColor = UIColor.black
+        
+        let fetchRequest: NSFetchRequest<Notebook> = Notebook.fetchRequest()
+        let sortDescriptor = NSSortDescriptor(key: "creationDate", ascending: false)
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        
+        if let result = try? dataController.viewContext.fetch(fetchRequest) {
+            notebooks = result
+            tableView.reloadData()
+        }
+        
         updateEditButtonState()
     }
 
@@ -44,13 +56,21 @@ class NotebooksListViewController: UIViewController {
     // MARK: - Internal methods
     
     func addNotebook(name: String) {
-        let notebook = Notebook(name: name)
-        notebooks.append(notebook)
-        tableView.insertRows(at: [IndexPath(row: numberOfNotebooks - 1, section: 0)], with: .fade)
+        let notebook = Notebook(context: dataController.viewContext)
+        notebook.name = name
+        notebook.creationDate = Date()
+        try? dataController.viewContext.save()
+        notebooks.insert(notebook, at: 0)
+        
+        tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
         updateEditButtonState()
     }
     
     func deleteNotebook(at indexPath: IndexPath) {
+        let notebookToDelete = notebook(at: indexPath)
+        dataController.viewContext.delete(notebookToDelete)
+        try? dataController.viewContext.save()
+        
         notebooks.remove(at: indexPath.row)
         tableView.deleteRows(at: [indexPath], with: .fade)
         if numberOfNotebooks == 0 {

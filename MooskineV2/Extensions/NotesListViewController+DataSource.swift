@@ -23,8 +23,10 @@ extension NotesListViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: NoteCell.defaultReuseIdentifier, for: indexPath) as! NoteCell
 
         cell.textPreviewLabel.text = aNote.text
-        cell.dateLabel.text = dateFormatter.string(from: aNote.creationDate)
-
+        if let creationDate = aNote.creationDate {
+            cell.dateLabel.text = dateFormatter.string(from: creationDate)
+        }
+        
         return cell
     }
 
