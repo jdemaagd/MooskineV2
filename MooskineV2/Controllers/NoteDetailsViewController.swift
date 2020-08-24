@@ -9,22 +9,25 @@
 import UIKit
 
 class NoteDetailsViewController: UIViewController {
-    /// A text view that displays a note's text
+
+    // MARK: - IBOutlets
+    
     @IBOutlet weak var textView: UITextView!
 
-    /// The note being displayed and edited
+    
+    // MARK: - variables
+    
     var note: Note!
-
-    /// A closure that is run when the user asks to delete the current note
     var onDelete: (() -> Void)?
-
-    /// A date formatter for the view controller's title text
     let dateFormatter: DateFormatter = {
         let df = DateFormatter()
         df.dateStyle = .medium
         return df
     }()
 
+    
+    // MARK: - Lifecycle methods
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -32,13 +35,16 @@ class NoteDetailsViewController: UIViewController {
         textView.text = note.text
     }
 
+    
+    // MARK: - IBActions
+    
     @IBAction func deleteNote(sender: Any) {
         presentDeleteNotebookAlert()
     }
 }
 
-// -----------------------------------------------------------------------------
-// MARK: - Editing
+
+// MARK: - Delete helpers
 
 extension NoteDetailsViewController {
     func presentDeleteNotebookAlert() {
@@ -53,12 +59,11 @@ extension NoteDetailsViewController {
     }
 }
 
-// -----------------------------------------------------------------------------
-// MARK: - UITextViewDelegate
+
+// MARK: - UITextViewDelegate methods
 
 extension NoteDetailsViewController: UITextViewDelegate {
     func textViewDidEndEditing(_ textView: UITextView) {
         note.text = textView.text
     }
 }
-
