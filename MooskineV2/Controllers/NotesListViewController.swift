@@ -18,7 +18,8 @@ class NotesListViewController: UIViewController {
     // MARK: - variables
     
     var notebook: Notebook!
-    var numberOfNotes: Int { return notebook.notes.count }
+    var notes: [Note] = []
+    var numberOfNotes: Int { return notes.count }
     let dateFormatter: DateFormatter = {
         let df = DateFormatter()
         df.dateStyle = .medium
@@ -50,13 +51,13 @@ class NotesListViewController: UIViewController {
     // MARK: - Internal methods
     
     func addNote() {
-        notebook.addNote()
+        //notebook.addNote()
         tableView.insertRows(at: [IndexPath(row: numberOfNotes - 1, section: 0)], with: .fade)
         updateEditButtonState()
     }
 
     func deleteNote(at indexPath: IndexPath) {
-        notebook.removeNote(at: indexPath.row)
+        //notebook.removeNote(at: indexPath.row)
         tableView.deleteRows(at: [indexPath], with: .fade)
         if numberOfNotes == 0 {
             setEditing(false, animated: true)
@@ -65,7 +66,7 @@ class NotesListViewController: UIViewController {
     }
 
     func note(at indexPath: IndexPath) -> Note {
-        return notebook.notes[indexPath.row]
+        return notes[indexPath.row]
     }
     
     func updateEditButtonState() {
