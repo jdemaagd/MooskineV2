@@ -21,18 +21,19 @@ extension NotebooksListViewController: UITableViewDataSource {
         let aNotebook = notebook(at: indexPath)
         let cell = tableView.dequeueReusableCell(withIdentifier: NotebookCell.defaultReuseIdentifier, for: indexPath) as! NotebookCell
 
-        // Configure cell
         cell.nameLabel.text = aNotebook.name
-        let pageString = aNotebook.notes.count == 1 ? "page" : "pages"
-        cell.pageCountLabel.text = "\(aNotebook.notes.count) \(pageString)"
-
+        if let count = aNotebook.notes?.count {
+            let pageString = count == 1 ? "page" : "pages"
+            cell.pageCountLabel.text = "\(count) \(pageString)"
+        }
+        
         return cell
     }
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         switch editingStyle {
         case .delete: deleteNotebook(at: indexPath)
-        default: () // Unsupported
+        default: () 
         }
     }
 }

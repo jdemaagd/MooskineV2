@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E616002724F30A7C00BE6FF9 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = E616002624F30A7C00BE6FF9 /* Note.swift */; };
-		E616002924F30AB100BE6FF9 /* Notebook.swift in Sources */ = {isa = PBXBuildFile; fileRef = E616002824F30AB100BE6FF9 /* Notebook.swift */; };
 		E616002F24F30C1A00BE6FF9 /* Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E616002E24F30C1A00BE6FF9 /* Cell.swift */; };
 		E616003124F30C5900BE6FF9 /* NotebookCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E616003024F30C5900BE6FF9 /* NotebookCell.swift */; };
 		E616003324F30C8700BE6FF9 /* NoteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E616003224F30C8700BE6FF9 /* NoteCell.swift */; };
@@ -23,6 +21,7 @@
 		E616FF4524F2FA0600BE6FF9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E616FF4324F2FA0600BE6FF9 /* LaunchScreen.storyboard */; };
 		E616FF5024F2FA0600BE6FF9 /* MooskineV2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E616FF4F24F2FA0600BE6FF9 /* MooskineV2Tests.swift */; };
 		E616FF5B24F2FA0600BE6FF9 /* MooskineV2UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E616FF5A24F2FA0600BE6FF9 /* MooskineV2UITests.swift */; };
+		E66E90D824F474CC00E4537F /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66E90D724F474CC00E4537F /* DataController.swift */; };
 		E6F73C7324F4607700D9918E /* NotesListViewController+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F73C7224F4607700D9918E /* NotesListViewController+DataSource.swift */; };
 		E6F73C7524F462E800D9918E /* NotebooksListViewController+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F73C7424F462E800D9918E /* NotebooksListViewController+DataSource.swift */; };
 /* End PBXBuildFile section */
@@ -45,8 +44,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		E616002624F30A7C00BE6FF9 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
-		E616002824F30AB100BE6FF9 /* Notebook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notebook.swift; sourceTree = "<group>"; };
 		E616002E24F30C1A00BE6FF9 /* Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cell.swift; sourceTree = "<group>"; };
 		E616003024F30C5900BE6FF9 /* NotebookCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotebookCell.swift; sourceTree = "<group>"; };
 		E616003224F30C8700BE6FF9 /* NoteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteCell.swift; sourceTree = "<group>"; };
@@ -70,6 +67,7 @@
 		E616FF5624F2FA0600BE6FF9 /* MooskineV2UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MooskineV2UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E616FF5A24F2FA0600BE6FF9 /* MooskineV2UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MooskineV2UITests.swift; sourceTree = "<group>"; };
 		E616FF5C24F2FA0600BE6FF9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E66E90D724F474CC00E4537F /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		E6F73C7224F4607700D9918E /* NotesListViewController+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NotesListViewController+DataSource.swift"; sourceTree = "<group>"; };
 		E6F73C7424F462E800D9918E /* NotebooksListViewController+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NotebooksListViewController+DataSource.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -103,8 +101,7 @@
 			isa = PBXGroup;
 			children = (
 				E616FF3E24F2FA0500BE6FF9 /* MooskineV2.xcdatamodeld */,
-				E616002624F30A7C00BE6FF9 /* Note.swift */,
-				E616002824F30AB100BE6FF9 /* Notebook.swift */,
+				E66E90D724F474CC00E4537F /* DataController.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -343,13 +340,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E616002724F30A7C00BE6FF9 /* Note.swift in Sources */,
 				E616FF4024F2FA0500BE6FF9 /* MooskineV2.xcdatamodeld in Sources */,
+				E66E90D824F474CC00E4537F /* DataController.swift in Sources */,
 				E616002F24F30C1A00BE6FF9 /* Cell.swift in Sources */,
 				E616003C24F30E1000BE6FF9 /* NotesListViewController.swift in Sources */,
 				E616FF3624F2FA0500BE6FF9 /* AppDelegate.swift in Sources */,
 				E6F73C7324F4607700D9918E /* NotesListViewController+DataSource.swift in Sources */,
-				E616002924F30AB100BE6FF9 /* Notebook.swift in Sources */,
 				E6F73C7524F462E800D9918E /* NotebooksListViewController+DataSource.swift in Sources */,
 				E616003324F30C8700BE6FF9 /* NoteCell.swift in Sources */,
 				E616003A24F30DCF00BE6FF9 /* NoteDetailsViewController.swift in Sources */,

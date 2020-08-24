@@ -17,6 +17,7 @@
     - Category/Extension
         - use for custom initializers/functions
         - most used
+    - Xcode - Preferences - Locations - Derived Data - click arrow to open in Finder
 - NSPersistenContainer: where data is stored (default: SQLite database)
 - Context (scratch pad): staging area of unsaved changes to data
     - call save() to save to container
@@ -33,4 +34,6 @@
 
 - [NSPredicate Cheat Sheet](https://academy.realm.io/posts/nspredicate-cheatsheet/)
 - [NSPredicate Blog](https://nshipster.com/nspredicate/)
+- [NSManagedObject](https://developer.apple.com/documentation/coredata/nsmanagedobject)
+- [Managed Object Relationships](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/CoreData/HowManagedObjectsarerelated.html)
 
