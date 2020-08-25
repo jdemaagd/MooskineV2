@@ -161,7 +161,7 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" systemColor="systemIndigoColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <connections>
-                                            <outlet property="dateLabel" destination="RcC-VR-WsY" id="J9k-OS-SaN"/>
+                                            <outlet property="dateLabel" destination="L9P-I6-rUo" id="3ZD-gL-qvC"/>
                                             <outlet property="textPreviewLabel" destination="dKe-ay-ZbA" id="BEJ-ZU-qcv"/>
                                             <segue destination="gMG-Cr-TII" kind="show" id="jhR-qd-Aof"/>
                                         </connections>

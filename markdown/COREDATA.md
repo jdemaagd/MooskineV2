@@ -32,8 +32,10 @@
 
 ## Resources
 
+- [NSPredicate](https://developer.apple.com/documentation/foundation/nspredicate)
 - [NSPredicate Cheat Sheet](https://academy.realm.io/posts/nspredicate-cheatsheet/)
 - [NSPredicate Blog](https://nshipster.com/nspredicate/)
 - [NSManagedObject](https://developer.apple.com/documentation/coredata/nsmanagedobject)
 - [Managed Object Relationships](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/CoreData/HowManagedObjectsarerelated.html)
+- [Faulting and Uniquing](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/CoreData/FaultingandUniquing.html)
 
