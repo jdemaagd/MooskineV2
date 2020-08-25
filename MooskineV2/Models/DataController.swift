@@ -36,6 +36,9 @@ class DataController {
             guard error == nil else {
                 fatalError(error!.localizedDescription)
             }
+            
+            self.autoSaveViewContext()
+            
             completion?()
         }
     }

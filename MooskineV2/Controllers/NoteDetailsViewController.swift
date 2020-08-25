@@ -17,6 +17,7 @@ class NoteDetailsViewController: UIViewController {
     
     // MARK: - variables
     
+    var dataController: DataController!
     var note: Note!
     var onDelete: (() -> Void)?
     let dateFormatter: DateFormatter = {
@@ -36,19 +37,10 @@ class NoteDetailsViewController: UIViewController {
         }
         textView.text = note.text
     }
-
     
-    // MARK: - IBActions
     
-    @IBAction func deleteNote(sender: Any) {
-        presentDeleteNotebookAlert()
-    }
-}
-
-
-// MARK: - Delete helpers
-
-extension NoteDetailsViewController {
+    // MARK: - Internal methods
+    
     func presentDeleteNotebookAlert() {
         let alert = UIAlertController(title: "Delete Note", message: "Do you want to delete this note?", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
@@ -59,13 +51,11 @@ extension NoteDetailsViewController {
     func deleteHandler(alertAction: UIAlertAction) {
         onDelete?()
     }
-}
 
-
-// MARK: - UITextViewDelegate methods
-
-extension NoteDetailsViewController: UITextViewDelegate {
-    func textViewDidEndEditing(_ textView: UITextView) {
-        note.text = textView.text
+    
+    // MARK: - IBActions
+    
+    @IBAction func deleteNote(sender: Any) {
+        presentDeleteNotebookAlert()
     }
 }
