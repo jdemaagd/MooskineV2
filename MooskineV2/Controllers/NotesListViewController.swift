@@ -14,18 +14,26 @@ class NotesListViewController: UIViewController {
     // MARK: - IBOutlets
     
     @IBOutlet weak var tableView: UITableView!
-
+    
     
     // MARK: - variables
     
     var dataController: DataController!
-    var fetchedResultsController: NSFetchedResultsController<Note>!
+    private var fetchedResultsController: NSFetchedResultsController<Note>!
+    private var listDataSource: ListDataSource<Note, NoteCell>!
     var notebook: Notebook!
+    
+
+    // MARK: - computed properties
+    
     let dateFormatter: DateFormatter = {
         let df = DateFormatter()
         df.dateStyle = .medium
         return df
     }()
+    var isEditingPossible: Bool {
+        return listDataSource.isEditingPossible
+    }
     
     
     // MARK: - Lifecycle methods
@@ -36,20 +44,23 @@ class NotesListViewController: UIViewController {
         navigationItem.title = notebook.name
         navigationItem.rightBarButtonItem = editButtonItem
         navigationItem.rightBarButtonItem?.tintColor = UIColor.black
-        
-        setupFetchedResultsController()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        setupFetchedResultsController()
+        setupDataSource()
+        
+        if let indexPath = tableView.indexPathForSelectedRow {
+            tableView.deselectRow(at: indexPath, animated: false)
+            tableView.reloadRows(at: [indexPath], with: .fade)
+        }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
-        fetchedResultsController = nil
+        listDataSource = nil
     }
 
     
@@ -66,39 +77,32 @@ class NotesListViewController: UIViewController {
     func addNote() {
         let note = Note(context: dataController.viewContext)
         note.text = "New Note"
-        note.creationDate = Date()
         note.notebook = notebook
-        try? dataController.viewContext.save()
-    }
-
-    func deleteNote(at indexPath: IndexPath) {
-        let noteToDelete = fetchedResultsController.object(at: indexPath)
-        dataController.viewContext.delete(noteToDelete)
         try? dataController.viewContext.save()
     }
     
     func updateEditButtonState() {
-        if let sections = fetchedResultsController.sections {
-            navigationItem.rightBarButtonItem?.isEnabled = sections[0].numberOfObjects > 0
-        }
+        navigationItem.rightBarButtonItem?.isEnabled = isEditingPossible
     }
 
 
-    // MARK: - fileprivate methods
+    // MARK: - private methods
     
-    fileprivate func setupFetchedResultsController() {
+    private func setupDataSource() {
         let fetchRequest: NSFetchRequest<Note> = Note.fetchRequest()
-        let predicate = NSPredicate(format: "%K == %@", "notebook", notebook)
         let sortDescriptor = NSSortDescriptor(key: "creationDate", ascending: false)
-        fetchRequest.predicate = predicate
+        let predicate = NSPredicate(format: "%K == %@", "notebook", notebook)
         fetchRequest.sortDescriptors = [sortDescriptor]
+        fetchRequest.predicate = predicate
         
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController.viewContext, sectionNameKeyPath: nil, cacheName: "\(notebook!)-notes")
-        fetchedResultsController.delegate = self
-        do {
-            try fetchedResultsController.performFetch()
-        } catch {
-            fatalError("The fetch could not be performed: \(error.localizedDescription)")
+        listDataSource = ListDataSource<Note, NoteCell>(tableView: tableView, viewContext: dataController.viewContext, fetchRequest: fetchRequest, configureCell: { (cell, note) in
+            cell.textPreviewLabel.text = note.text
+            if let creationDate = note.creationDate {
+                cell.dateLabel.text = self.dateFormatter.string(from: creationDate)
+            }
+        })
+        listDataSource.onContentUpdated = {
+            self.updateEditButtonState()
         }
     }
 
@@ -109,11 +113,11 @@ class NotesListViewController: UIViewController {
         if let vc = segue.destination as? NoteDetailsViewController {
             if let indexPath = tableView.indexPathForSelectedRow {
                 vc.dataController = dataController
-                vc.note = fetchedResultsController.object(at: indexPath)
+                vc.note = listDataSource.object(at: indexPath)
 
                 vc.onDelete = { [weak self] in
                     if let indexPath = self?.tableView.indexPathForSelectedRow {
-                        self?.deleteNote(at: indexPath)
+                        self?.listDataSource?.deleteItem(at: indexPath)
                         self?.navigationController?.popViewController(animated: true)
                     }
                 }
@@ -124,7 +128,7 @@ class NotesListViewController: UIViewController {
     
     // MARK: - IBActions
     
-    @IBAction func addTapped(sender: Any) {
+    @IBAction func addTapped(sender: UIBarButtonItem) {
         addNote()
     }
 }
