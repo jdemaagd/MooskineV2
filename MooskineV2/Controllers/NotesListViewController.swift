@@ -19,9 +19,8 @@ class NotesListViewController: UIViewController {
     // MARK: - variables
     
     var dataController: DataController!
+    var fetchedResultsController: NSFetchedResultsController<Note>!
     var notebook: Notebook!
-    var notes: [Note] = []
-    var numberOfNotes: Int { return notes.count }
     let dateFormatter: DateFormatter = {
         let df = DateFormatter()
         df.dateStyle = .medium
@@ -38,31 +37,31 @@ class NotesListViewController: UIViewController {
         navigationItem.rightBarButtonItem = editButtonItem
         navigationItem.rightBarButtonItem?.tintColor = UIColor.black
         
-        let fetchRequest: NSFetchRequest<Note> = Note.fetchRequest()
-        let predicate = NSPredicate(format: "%K == %@", "notebook", notebook)
-        let sortDescriptor = NSSortDescriptor(key: "creationDate", ascending: true)
-        fetchRequest.predicate = predicate
-        fetchRequest.sortDescriptors = [sortDescriptor]
-        
-        if let result = try? dataController.viewContext.fetch(fetchRequest) {
-            notes = result
-            tableView.reloadData()
-        }
-        
-        updateEditButtonState()
+        setupFetchedResultsController()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        if let indexPath = tableView.indexPathForSelectedRow {
-            tableView.deselectRow(at: indexPath, animated: false)
-            tableView.reloadRows(at: [indexPath], with: .fade)
-        }
+        setupFetchedResultsController()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        fetchedResultsController = nil
     }
 
+    
+    // MARK: - override methods
+    
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        tableView.setEditing(editing, animated: animated)
+    }
+    
 
-    // MARK: - Internal methods
+    // MARK: - internal methods
     
     func addNote() {
         let note = Note(context: dataController.viewContext)
@@ -70,36 +69,37 @@ class NotesListViewController: UIViewController {
         note.creationDate = Date()
         note.notebook = notebook
         try? dataController.viewContext.save()
-        notes.insert(note, at: 0)
-        
-        tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
-        updateEditButtonState()
     }
 
     func deleteNote(at indexPath: IndexPath) {
-        let noteToDelete = note(at: indexPath)
+        let noteToDelete = fetchedResultsController.object(at: indexPath)
         dataController.viewContext.delete(noteToDelete)
         try? dataController.viewContext.save()
-        notes.remove(at: indexPath.row)
-        
-        tableView.deleteRows(at: [indexPath], with: .fade)
-        if numberOfNotes == 0 {
-            setEditing(false, animated: true)
-        }
-        updateEditButtonState()
-    }
-
-    func note(at indexPath: IndexPath) -> Note {
-        return notes[indexPath.row]
     }
     
     func updateEditButtonState() {
-        navigationItem.rightBarButtonItem?.isEnabled = numberOfNotes > 0
+        if let sections = fetchedResultsController.sections {
+            navigationItem.rightBarButtonItem?.isEnabled = sections[0].numberOfObjects > 0
+        }
     }
 
-    override func setEditing(_ editing: Bool, animated: Bool) {
-        super.setEditing(editing, animated: animated)
-        tableView.setEditing(editing, animated: animated)
+
+    // MARK: - fileprivate methods
+    
+    fileprivate func setupFetchedResultsController() {
+        let fetchRequest: NSFetchRequest<Note> = Note.fetchRequest()
+        let predicate = NSPredicate(format: "%K == %@", "notebook", notebook)
+        let sortDescriptor = NSSortDescriptor(key: "creationDate", ascending: false)
+        fetchRequest.predicate = predicate
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController.viewContext, sectionNameKeyPath: nil, cacheName: "\(notebook!)-notes")
+        fetchedResultsController.delegate = self
+        do {
+            try fetchedResultsController.performFetch()
+        } catch {
+            fatalError("The fetch could not be performed: \(error.localizedDescription)")
+        }
     }
 
 
@@ -109,7 +109,7 @@ class NotesListViewController: UIViewController {
         if let vc = segue.destination as? NoteDetailsViewController {
             if let indexPath = tableView.indexPathForSelectedRow {
                 vc.dataController = dataController
-                vc.note = note(at: indexPath)
+                vc.note = fetchedResultsController.object(at: indexPath)
 
                 vc.onDelete = { [weak self] in
                     if let indexPath = self?.tableView.indexPathForSelectedRow {
