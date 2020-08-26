@@ -14,35 +14,39 @@ class NotebooksListViewController: UIViewController {
     // MARK: - IBOutlets
     
     @IBOutlet weak var tableView: UITableView!
-
     
+
     // MARK: - variables
     
     var dataController: DataController!
-    var fetchedResultsController: NSFetchedResultsController<Notebook>!
+    private var listDataSource: ListDataSource<Notebook, NotebookCell>!
 
     
     // MARK: - Lifecycle methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         navigationItem.titleView = UIImageView(image: #imageLiteral(resourceName: "toolbar-cow"))
         navigationItem.rightBarButtonItem = editButtonItem
         navigationItem.rightBarButtonItem?.tintColor = UIColor.black
-        
-        setupFetchedResultsController()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        setupFetchedResultsController()
+        setupDataSource()
+        
+        if let indexPath = tableView.indexPathForSelectedRow {
+            tableView.deselectRow(at: indexPath, animated: false)
+            tableView.reloadRows(at: [indexPath], with: .fade)
+        }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
-        fetchedResultsController = nil
+        listDataSource = nil
     }
 
 
@@ -52,20 +56,13 @@ class NotebooksListViewController: UIViewController {
         super.setEditing(editing, animated: animated)
         tableView.setEditing(editing, animated: animated)
     }
-    
+
     
     // MARK: - internal methods
     
     func addNotebook(name: String) {
         let notebook = Notebook(context: dataController.viewContext)
         notebook.name = name
-        notebook.creationDate = Date()
-        try? dataController.viewContext.save()
-    }
-    
-    func deleteNotebook(at indexPath: IndexPath) {
-        let notebookToDelete = fetchedResultsController.object(at: indexPath)
-        dataController.viewContext.delete(notebookToDelete)
         try? dataController.viewContext.save()
     }
     
@@ -97,36 +94,37 @@ class NotebooksListViewController: UIViewController {
     }
     
     func updateEditButtonState() {
-        if let sections = fetchedResultsController.sections {
-            navigationItem.rightBarButtonItem?.isEnabled = sections[0].numberOfObjects > 0
-        }
+        navigationItem.rightBarButtonItem?.isEnabled = listDataSource.isEditingPossible
     }
     
     
-    // MARK: - fileprivate methods
+    // MARK: - private methods
     
-    fileprivate func setupFetchedResultsController() {
+    private func setupDataSource() {
         let fetchRequest: NSFetchRequest<Notebook> = Notebook.fetchRequest()
         let sortDescriptor = NSSortDescriptor(key: "creationDate", ascending: false)
         fetchRequest.sortDescriptors = [sortDescriptor]
         
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController.viewContext, sectionNameKeyPath: nil, cacheName: "notebooks")
-        fetchedResultsController.delegate = self
-        do {
-            try fetchedResultsController.performFetch()
-        } catch {
-            fatalError("The fetch could not be performed: \(error.localizedDescription)")
+        listDataSource = ListDataSource(tableView: tableView, viewContext: dataController.viewContext, fetchRequest: fetchRequest, configureCell: { (cell, notebook) in
+            cell.nameLabel.text = notebook.name
+            let count = notebook.notes?.count ?? 0
+            let pageString = count == 1 ? "page" : "pages"
+            cell.pageCountLabel.text = "\(count) \(pageString)"
+        })
+        
+        listDataSource.onContentUpdated = {
+            self.updateEditButtonState()
         }
     }
 
-
+    
     // MARK: - Segues
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let vc = segue.destination as? NotesListViewController {
             if let indexPath = tableView.indexPathForSelectedRow {
+                vc.notebook = listDataSource.object(at: indexPath)
                 vc.dataController = dataController
-                vc.notebook = fetchedResultsController.object(at: indexPath)
             }
         }
     }
@@ -134,7 +132,7 @@ class NotebooksListViewController: UIViewController {
     
     // MARK: - Actions
 
-    @IBAction func addTapped(sender: Any) {
+    @IBAction func addTapped(sender: UIBarButtonItem) {
         presentNewNotebookAlert()
     }
 }
