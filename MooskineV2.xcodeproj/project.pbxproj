@@ -26,6 +26,8 @@
 		E66E90DC24F4909E00E4537F /* DataController+AutoSave.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66E90DB24F4909E00E4537F /* DataController+AutoSave.swift */; };
 		E66E90DF24F4946000E4537F /* Notebook+CreationDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66E90DE24F4946000E4537F /* Notebook+CreationDate.swift */; };
 		E66E90E124F4947500E4537F /* Note+CreationDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66E90E024F4947500E4537F /* Note+CreationDate.swift */; };
+		E66E90E524F5CB8400E4537F /* NotebooksListViewController+FetchedResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66E90E424F5CB8400E4537F /* NotebooksListViewController+FetchedResults.swift */; };
+		E66E90E724F5D79C00E4537F /* NotesListViewController+FetchedResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66E90E624F5D79C00E4537F /* NotesListViewController+FetchedResults.swift */; };
 		E6F73C7324F4607700D9918E /* NotesListViewController+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F73C7224F4607700D9918E /* NotesListViewController+DataSource.swift */; };
 		E6F73C7524F462E800D9918E /* NotebooksListViewController+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F73C7424F462E800D9918E /* NotebooksListViewController+DataSource.swift */; };
 /* End PBXBuildFile section */
@@ -76,6 +78,8 @@
 		E66E90DB24F4909E00E4537F /* DataController+AutoSave.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DataController+AutoSave.swift"; sourceTree = "<group>"; };
 		E66E90DE24F4946000E4537F /* Notebook+CreationDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notebook+CreationDate.swift"; sourceTree = "<group>"; };
 		E66E90E024F4947500E4537F /* Note+CreationDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Note+CreationDate.swift"; sourceTree = "<group>"; };
+		E66E90E424F5CB8400E4537F /* NotebooksListViewController+FetchedResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NotebooksListViewController+FetchedResults.swift"; sourceTree = "<group>"; };
+		E66E90E624F5D79C00E4537F /* NotesListViewController+FetchedResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NotesListViewController+FetchedResults.swift"; sourceTree = "<group>"; };
 		E6F73C7224F4607700D9918E /* NotesListViewController+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NotesListViewController+DataSource.swift"; sourceTree = "<group>"; };
 		E6F73C7424F462E800D9918E /* NotebooksListViewController+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NotebooksListViewController+DataSource.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -221,9 +225,11 @@
 			isa = PBXGroup;
 			children = (
 				E66E90DD24F4943200E4537F /* ManagedObjects */,
-				E6F73C7224F4607700D9918E /* NotesListViewController+DataSource.swift */,
 				E6F73C7424F462E800D9918E /* NotebooksListViewController+DataSource.swift */,
+				E66E90E424F5CB8400E4537F /* NotebooksListViewController+FetchedResults.swift */,
 				E66E90D924F48E3500E4537F /* NoteDetailsViewController+TextField.swift */,
+				E6F73C7224F4607700D9918E /* NotesListViewController+DataSource.swift */,
+				E66E90E624F5D79C00E4537F /* NotesListViewController+FetchedResults.swift */,
 				E66E90DB24F4909E00E4537F /* DataController+AutoSave.swift */,
 			);
 			path = Extensions;
@@ -370,10 +376,12 @@
 				E616FF3624F2FA0500BE6FF9 /* AppDelegate.swift in Sources */,
 				E6F73C7324F4607700D9918E /* NotesListViewController+DataSource.swift in Sources */,
 				E6F73C7524F462E800D9918E /* NotebooksListViewController+DataSource.swift in Sources */,
+				E66E90E524F5CB8400E4537F /* NotebooksListViewController+FetchedResults.swift in Sources */,
 				E616003324F30C8700BE6FF9 /* NoteCell.swift in Sources */,
 				E616003A24F30DCF00BE6FF9 /* NoteDetailsViewController.swift in Sources */,
 				E66E90DA24F48E3500E4537F /* NoteDetailsViewController+TextField.swift in Sources */,
 				E616003824F30D9F00BE6FF9 /* NotebooksListViewController.swift in Sources */,
+				E66E90E724F5D79C00E4537F /* NotesListViewController+FetchedResults.swift in Sources */,
 				E616003124F30C5900BE6FF9 /* NotebookCell.swift in Sources */,
 				E616FF3824F2FA0500BE6FF9 /* SceneDelegate.swift in Sources */,
 			);
