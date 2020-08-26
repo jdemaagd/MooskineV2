@@ -19,8 +19,7 @@ class NotebooksListViewController: UIViewController {
     // MARK: - variables
     
     var dataController: DataController!
-    var notebooks: [Notebook] = []
-    var numberOfNotebooks: Int { return notebooks.count }
+    var fetchedResultsController: NSFetchedResultsController<Notebook>!
 
     
     // MARK: - Lifecycle methods
@@ -31,56 +30,43 @@ class NotebooksListViewController: UIViewController {
         navigationItem.rightBarButtonItem = editButtonItem
         navigationItem.rightBarButtonItem?.tintColor = UIColor.black
         
-        let fetchRequest: NSFetchRequest<Notebook> = Notebook.fetchRequest()
-        let sortDescriptor = NSSortDescriptor(key: "creationDate", ascending: false)
-        fetchRequest.sortDescriptors = [sortDescriptor]
-        
-        if let result = try? dataController.viewContext.fetch(fetchRequest) {
-            notebooks = result
-            tableView.reloadData()
-        }
-        
-        updateEditButtonState()
+        setupFetchedResultsController()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        if let indexPath = tableView.indexPathForSelectedRow {
-            tableView.deselectRow(at: indexPath, animated: false)
-            tableView.reloadRows(at: [indexPath], with: .fade)
-        }
+        setupFetchedResultsController()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        fetchedResultsController = nil
     }
 
 
-    // MARK: - Internal methods
+    // MARK: - override methods
+    
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        tableView.setEditing(editing, animated: animated)
+    }
+    
+    
+    // MARK: - internal methods
     
     func addNotebook(name: String) {
         let notebook = Notebook(context: dataController.viewContext)
         notebook.name = name
         notebook.creationDate = Date()
         try? dataController.viewContext.save()
-        notebooks.insert(notebook, at: 0)
-        
-        tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
-        updateEditButtonState()
     }
     
     func deleteNotebook(at indexPath: IndexPath) {
-        let notebookToDelete = notebook(at: indexPath)
+        let notebookToDelete = fetchedResultsController.object(at: indexPath)
         dataController.viewContext.delete(notebookToDelete)
         try? dataController.viewContext.save()
-        notebooks.remove(at: indexPath.row)
-        
-        tableView.deleteRows(at: [indexPath], with: .fade)
-        if numberOfNotebooks == 0 {
-            setEditing(false, animated: true)
-        }
-        updateEditButtonState()
-    }
-    
-    func notebook(at indexPath: IndexPath) -> Notebook {
-        return notebooks[indexPath.row]
     }
     
     func presentNewNotebookAlert() {
@@ -109,14 +95,28 @@ class NotebooksListViewController: UIViewController {
         alert.addAction(saveAction)
         present(alert, animated: true, completion: nil)
     }
-
-    override func setEditing(_ editing: Bool, animated: Bool) {
-        super.setEditing(editing, animated: animated)
-        tableView.setEditing(editing, animated: animated)
-    }
-
+    
     func updateEditButtonState() {
-        navigationItem.rightBarButtonItem?.isEnabled = numberOfNotebooks > 0
+        if let sections = fetchedResultsController.sections {
+            navigationItem.rightBarButtonItem?.isEnabled = sections[0].numberOfObjects > 0
+        }
+    }
+    
+    
+    // MARK: - fileprivate methods
+    
+    fileprivate func setupFetchedResultsController() {
+        let fetchRequest: NSFetchRequest<Notebook> = Notebook.fetchRequest()
+        let sortDescriptor = NSSortDescriptor(key: "creationDate", ascending: false)
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController.viewContext, sectionNameKeyPath: nil, cacheName: "notebooks")
+        fetchedResultsController.delegate = self
+        do {
+            try fetchedResultsController.performFetch()
+        } catch {
+            fatalError("The fetch could not be performed: \(error.localizedDescription)")
+        }
     }
 
 
@@ -126,7 +126,7 @@ class NotebooksListViewController: UIViewController {
         if let vc = segue.destination as? NotesListViewController {
             if let indexPath = tableView.indexPathForSelectedRow {
                 vc.dataController = dataController
-                vc.notebook = notebook(at: indexPath)
+                vc.notebook = fetchedResultsController.object(at: indexPath)
             }
         }
     }
