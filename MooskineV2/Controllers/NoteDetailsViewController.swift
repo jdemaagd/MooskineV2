@@ -19,6 +19,8 @@ class NoteDetailsViewController: UIViewController {
     
     var dataController: DataController!
     var note: Note!
+    var saveOberverToken: Any?
+    
     var onDelete: (() -> Void)?
     let dateFormatter: DateFormatter = {
         let df = DateFormatter()
@@ -36,8 +38,15 @@ class NoteDetailsViewController: UIViewController {
             navigationItem.title = dateFormatter.string(from: creationDate)
         }
         textView.attributedText = note.attributedText
+
+        configureToolbarItems()
+        configureTextViewInputAccessoryView()
         
-        self.textView.addDoneButton(title: "Done", target: self, selector: #selector(tapDone(sender:)))
+        addSaveNotificationObserver()
+    }
+    
+    deinit {
+        removeSaveNotificationObserver()
     }
     
 
