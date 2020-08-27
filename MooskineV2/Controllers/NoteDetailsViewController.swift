@@ -35,11 +35,17 @@ class NoteDetailsViewController: UIViewController {
         if let creationDate = note.creationDate {
             navigationItem.title = dateFormatter.string(from: creationDate)
         }
-        textView.text = note.text
+        textView.attributedText = note.attributedText
+        
+        self.textView.addDoneButton(title: "Done", target: self, selector: #selector(tapDone(sender:)))
     }
     
-    
+
     // MARK: - Internal methods
+    
+    @objc func tapDone(sender: Any) {
+        self.view.endEditing(true)
+    }
     
     func presentDeleteNotebookAlert() {
         let alert = UIAlertController(title: "Delete Note", message: "Do you want to delete this note?", preferredStyle: .alert)
@@ -51,7 +57,13 @@ class NoteDetailsViewController: UIViewController {
     func deleteHandler(alertAction: UIAlertAction) {
         onDelete?()
     }
-
+    
+    func textViewShouldReturn(_ textView: UITextView) -> Bool {
+       textView.resignFirstResponder()
+        
+       return true
+    }
+    
     
     // MARK: - IBActions
     

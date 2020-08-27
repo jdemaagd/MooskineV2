@@ -221,7 +221,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                 <connections>
-                                    <outlet property="delegate" destination="gMG-Cr-TII" id="Tsh-2v-YKb"/>
+                                    <outlet property="delegate" destination="gMG-Cr-TII" id="CqY-6F-3pW"/>
                                 </connections>
                             </textView>
                         </subviews>
