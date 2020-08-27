@@ -76,7 +76,7 @@ class NotesListViewController: UIViewController {
     
     func addNote() {
         let note = Note(context: dataController.viewContext)
-        note.text = "New Note"
+        note.attributedText = NSAttributedString(string: "New Note")
         note.notebook = notebook
         try? dataController.viewContext.save()
     }
@@ -96,7 +96,7 @@ class NotesListViewController: UIViewController {
         fetchRequest.predicate = predicate
         
         listDataSource = ListDataSource<Note, NoteCell>(tableView: tableView, viewContext: dataController.viewContext, fetchRequest: fetchRequest, configureCell: { (cell, note) in
-            cell.textPreviewLabel.text = note.text
+            cell.textPreviewLabel.attributedText = note.attributedText
             if let creationDate = note.creationDate {
                 cell.dateLabel.text = self.dateFormatter.string(from: creationDate)
             }
