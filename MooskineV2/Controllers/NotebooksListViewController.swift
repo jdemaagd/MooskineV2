@@ -106,10 +106,14 @@ class NotebooksListViewController: UIViewController {
         fetchRequest.sortDescriptors = [sortDescriptor]
         
         listDataSource = ListDataSource(tableView: tableView, viewContext: dataController.viewContext, fetchRequest: fetchRequest, configureCell: { (cell, notebook) in
+            
+            let count = notebook.notes?.count
+            var pageString = count == 1 ? "1 item" : "\(count!) items"
+            if count == 0 {
+                pageString = "no items"
+            }
+            cell.pageCountLabel.text = pageString
             cell.nameLabel.text = notebook.name
-            let count = notebook.notes?.count ?? 0
-            let pageString = count == 1 ? "page" : "pages"
-            cell.pageCountLabel.text = "\(count) \(pageString)"
         })
         
         listDataSource.onContentUpdated = {

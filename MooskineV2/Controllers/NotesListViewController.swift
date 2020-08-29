@@ -25,12 +25,7 @@ class NotesListViewController: UIViewController {
     
 
     // MARK: - computed properties
-    
-    let dateFormatter: DateFormatter = {
-        let df = DateFormatter()
-        df.dateStyle = .medium
-        return df
-    }()
+
     var isEditingPossible: Bool {
         return listDataSource.isEditingPossible
     }
@@ -98,7 +93,9 @@ class NotesListViewController: UIViewController {
         listDataSource = ListDataSource<Note, NoteCell>(tableView: tableView, viewContext: dataController.viewContext, fetchRequest: fetchRequest, configureCell: { (cell, note) in
             cell.textPreviewLabel.attributedText = note.attributedText
             if let creationDate = note.creationDate {
-                cell.dateLabel.text = self.dateFormatter.string(from: creationDate)
+                let dateFormatter = DateFormatter()
+                dateFormatter.setLocalizedDateFormatFromTemplate("MMM d, h:mm a")
+                cell.dateLabel.text = dateFormatter.string(from: creationDate)
             }
         })
         listDataSource.onContentUpdated = {

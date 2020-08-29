@@ -27,7 +27,7 @@ defaults.set(dict, forKey: "MyDict")
 
 let volume = defaults.float(forKey: "Volume")
 let appLastOpened = defaults.object(forKey: "AppLastOpenedByUser")
-let myList = defaults.array(forKey: "MyList")
+let myList = defaults.array(forKey: "MyList") as! [Int]
 let myDict = defaults.dictionary(forKey: "MyDict")
 
 ```

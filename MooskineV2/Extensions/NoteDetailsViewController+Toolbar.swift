@@ -57,7 +57,7 @@ extension NoteDetailsViewController {
     
     @IBAction func boldTapped(sender: Any) {
         let newText = textView.attributedText.mutableCopy() as! NSMutableAttributedString
-        newText.addAttribute(.font, value: UIFont(name: "AvenirNext-Heavy", size: 22)!, range: textView.selectedRange)
+        newText.addAttribute(.font, value: UIFont(name: "AvenirNext-Heavy", size: 27)!, range: textView.selectedRange)
         
         let selectedTextRange = textView.selectedTextRange
         
