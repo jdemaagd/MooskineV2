@@ -22,11 +22,6 @@ class NoteDetailsViewController: UIViewController {
     var saveOberverToken: Any?
     
     var onDelete: (() -> Void)?
-    let dateFormatter: DateFormatter = {
-        let df = DateFormatter()
-        df.dateStyle = .medium
-        return df
-    }()
 
     
     // MARK: - Lifecycle methods
@@ -35,6 +30,8 @@ class NoteDetailsViewController: UIViewController {
         super.viewDidLoad()
 
         if let creationDate = note.creationDate {
+            let dateFormatter = DateFormatter()
+            dateFormatter.setLocalizedDateFormatFromTemplate("MMM d, h:mm a")
             navigationItem.title = dateFormatter.string(from: creationDate)
         }
         textView.attributedText = note.attributedText
